@@ -1,7 +1,14 @@
-const { createContext, useContext, useEffect, useState, useMemo } = require("react");
+const {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+} = require("react");
 
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
+import { setupHooks } from "./hooks/setupHooks";
 
 const Web3Context = createContext(null);
 
@@ -13,7 +20,7 @@ export default function Web3Provider({ children }) {
     isLoading: true,
   });
 
-  useEffect(() => { 
+  useEffect(() => {
     const loadProvider = async () => {
       const provider = await detectEthereumProvider();
       if (provider) {
@@ -33,31 +40,32 @@ export default function Web3Provider({ children }) {
     loadProvider();
   }, []);
 
-
-  const _web3Api=useMemo(()=>{
+  const _web3Api = useMemo(() => {
+    const { web3, provider } = web3Api;
     return {
       ...web3Api,
-      Connect:web3Api.provider?
-              async()=>{
-                try {
-                  await web3Api.provider.request({method:"eth_requestAccounts"})
-                  console.log('metamask is connected');
-                } catch (error) {
-                  location.reload();
-                }
-              }:
-              ()=>{console.error("Error While conneting web3.js to metamask")}
-      }
-  },[web3Api])
+      isWeb3Loaded: web3 != null,
+      hooks: setupHooks(web3),
+      connect: provider
+        ? async () => {
+            try {
+              await provider.request({ method: "eth_requestAccounts" });
+            } catch {
+              location.reload();
+            }
+          }
+        : () =>
+            console.error(
+              "Cannot connect to Metamask, try to reload your browser please."
+            ),
+    };
+  }, [web3Api]);
 
   return (
-    <Web3Context.Provider value={_web3Api}>
-      {children}
-      </Web3Context.Provider>
+    <Web3Context.Provider value={_web3Api}>{children}</Web3Context.Provider>
   );
 }
 
 export function useWeb3() {
   return useContext(Web3Context);
 }
-
