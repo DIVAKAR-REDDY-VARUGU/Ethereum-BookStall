@@ -40,9 +40,9 @@ export default function Footer() {
                   Loading...
                 </Button>
               ) : isWeb3Loaded ? (
-                account ? (
+                account.data ? (
                   <Button hoverable={false} className="cursor-default">
-                    Hi there
+                    Hi there {account.isAdmin && "Admin"}
                   </Button>
                 ) : (
                   <Button onClick={connect}>Connect</Button>
@@ -60,10 +60,10 @@ export default function Footer() {
           </div>
         </nav>
       </div>
-      {account && (
+      {account.data && (
         <div className="flex justify-end pt-1 sm:px-6 lg:px-8">
           <div className="text-white bg-indigo-600 rounded-md p-2">
-            {account}
+            {account.data}
           </div>
         </div>
       )}
