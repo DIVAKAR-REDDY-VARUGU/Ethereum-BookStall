@@ -1,4 +1,6 @@
 
+
+
 import { CourseList } from "@components/ui/course"
 import { BaseLayout } from "@components/ui/layout"
 import { getAllCourses } from "@content/courses/fetcher"
@@ -13,9 +15,9 @@ export default function Marketplace({courses}) {
   return (
     <>
       <div className="py-4">
-        { network.data }
         <WalletBar
           address={account.data}
+          network={network.data}
         />
       </div>
       <CourseList
