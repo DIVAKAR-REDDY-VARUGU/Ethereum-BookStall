@@ -2,10 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.fit{
-    min-height: calc(100vh-88px);
+.fit {
+  min-height: calc(100vh - 88px);
 }
-::-webkit-scrollbar{
-    width:0px;
+
+.next-image-wrapper > div {
+  height: 100%;
 }
